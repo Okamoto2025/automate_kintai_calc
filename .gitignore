@@ -1,0 +1,10 @@
+config.ini
+/old
+/venv
+/.venv
+/data/*
+!/data/
+/log/*
+!/log/
+.env
+.vscode/settings.json
