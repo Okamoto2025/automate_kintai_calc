@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.edge.webdriver import WebDriver as EdgeWebDriver
 from selenium.webdriver.edge.options import Options
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
@@ -20,7 +21,7 @@ options = Options()
 options.add_argument('--start-maximized')
 
 # WebDriverを初期化
-driver = webdriver.Edge(options=options)
+driver = EdgeWebDriver(options=options)
 
 # .envファイルからIDとパスワードを読み込む
 load_dotenv()
