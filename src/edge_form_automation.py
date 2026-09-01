@@ -15,13 +15,20 @@ import logging
 from datetime import datetime, timedelta
 from pathlib import Path
 
+def require_non_empty_value(name, value):
+    if value is None:
+        raise ValueError(f'必須環境変数 {name} が未設定です。.env を確認してください。')
+    value = value.strip()
+    if not value:
+        raise ValueError(f'必須環境変数 {name} が空です。.env を確認してください。')
+    return value
+
 # Selenium ManagerでEdgeドライバーを自動解決
 # Edgeオプションを設定
 options = Options()
 options.add_argument('--start-maximized')
 
-# WebDriverを初期化
-driver = EdgeWebDriver(options=options)
+driver = None
 
 # .envファイルからIDとパスワードを読み込む
 load_dotenv()
@@ -187,6 +194,12 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 try:
+    USER_ID = require_non_empty_value('USER_ID', USER_ID)
+    USER_PASSWORD = require_non_empty_value('USER_PASSWORD', USER_PASSWORD)
+    LOGIN_URL = require_non_empty_value('LOGIN_URL', LOGIN_URL)
+
+    # WebDriverを初期化
+    driver = EdgeWebDriver(options=options)
 
     logger.info(f"勤怠処理開始")
 
@@ -396,7 +409,8 @@ finally:
     #     data.to_excel(excel_file_path, sheet_name=SHEET_NAME, index=False)
 
     #ブラウザを閉じる
-    driver.quit()
+    if driver is not None:
+        driver.quit()
 
 #ダウンロードしたcsvファイル群を開く(ファイル名はdaily_resで始まる)
 #所属番号が00020B31で始まるもののみ抽出して結合
